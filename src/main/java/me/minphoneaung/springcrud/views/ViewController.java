@@ -40,8 +40,9 @@ public class ViewController {
     }
 
     @PostMapping("/students/create")
-    public String handleStudentCreate(@Valid @ModelAttribute("student") StudentDto data, BindingResult theBindingResult){
+    public String handleStudentCreate(@Valid @ModelAttribute("student") StudentDto data, BindingResult theBindingResult, Model model){
         if(theBindingResult.hasErrors()) {
+            model.addAttribute("schools", schoolService.getAllSchools());
             return "create-student";
         }
         studentService.createStudent(data);
@@ -56,7 +57,7 @@ public class ViewController {
     }
 
     @PostMapping("/students/edit/{id}")
-    public String studentHandleUpdate(@PathVariable Integer id, @ModelAttribute StudentDto data) {
+    public String handleStudentUpdate(@PathVariable Integer id, @ModelAttribute StudentDto data) {
         studentService.updateStudentById(id, data);
         return "redirect:/";
     }
@@ -81,8 +82,9 @@ public class ViewController {
     }
 
     @PostMapping("/schools/create")
-    public String handleSchoolCreate(@Valid @ModelAttribute("school") SchoolDto data, BindingResult theBindingResults) {
+    public String handleSchoolCreate(@Valid @ModelAttribute("school") SchoolDto data, BindingResult theBindingResults, Model model) {
         if(theBindingResults.hasErrors()) {
+            model.addAttribute("schools", schoolService.getAllSchools());
             return "create-school";
         }
         schoolService.createSchool(data);

@@ -11,6 +11,8 @@ public record StudentResponseDto (
         Integer age,
         School school,
 
+        Integer schoolId,
+
         LocalDate startedAt
 ) {
 }

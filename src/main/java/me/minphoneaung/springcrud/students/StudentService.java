@@ -29,7 +29,9 @@ public class StudentService {
         for (Student student: students) {
             result.add(new StudentResponseDto(student.getId(),
                     student.getName(), student.getEmail(),
-                    student.getAge(), student.getSchool(), student.getStartedAt()));
+                    student.getAge(), student.getSchool(),
+                    student.getSchool() == null ? null : student.getSchool().getId(),
+                    student.getStartedAt()));
         }
 
         return result;
@@ -61,9 +63,14 @@ public class StudentService {
         student.setId(id);
         student.setName(dto.name());
         student.setEmail(dto.email());
+        student.setStartedAt(dto.startedAt());
         student.setAge(dto.age());
-        var school = schoolRepository.findById(dto.schoolId()).orElseThrow();
-        student.setSchool(school);
+        if(dto.schoolId() != null) {
+            var school = schoolRepository.findById(dto.schoolId()).orElseThrow();
+            student.setSchool(school);
+        } else {
+            student.setSchool(null);
+        }
         return mapper.toStudentResponseDto(repository.save(student));
     }
 

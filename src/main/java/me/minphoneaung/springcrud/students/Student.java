@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.minphoneaung.springcrud.schools.School;
+import org.hibernate.annotations.OnDelete;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,7 +31,7 @@ public class Student {
     private Integer age;
 
     @ManyToOne
-    @JoinColumn(name = "school_id")
+    @JoinColumn(name = "school_id", nullable = true)
     @JsonManagedReference
     private School school;
 

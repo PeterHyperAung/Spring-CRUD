@@ -1,14 +1,13 @@
 package me.minphoneaung.springcrud.schools;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.minphoneaung.springcrud.students.Student;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 
@@ -23,7 +22,8 @@ public class School {
 
     private String name;
 
-    @OneToMany(mappedBy = "school")
+    @OneToMany(mappedBy = "school", cascade = CascadeType.PERSIST)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonBackReference
     private List<Student> students;
 }

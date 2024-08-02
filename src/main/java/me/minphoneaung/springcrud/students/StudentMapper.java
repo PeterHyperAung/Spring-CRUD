@@ -30,6 +30,7 @@ public class StudentMapper {
                 student.getEmail(),
                 student.getAge(),
                 student.getSchool(),
+                student.getSchool() == null ? null : student.getSchool().getId(),
                 student.getStartedAt()
         );
     }

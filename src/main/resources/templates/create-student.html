@@ -39,6 +39,7 @@
             <div th:if="${#fields.hasErrors('email')}"
                   th:errors="*{email}"
                   class="text-sm text-danger mb-1"></div>
+            <div th:if="${emailDuplicateError != null}" class="mb-1 text-sm text-danger mb-1" th:text="${emailDuplicateError}"></div>
           </div>
 
           <div class="mb-4">
@@ -52,6 +53,7 @@
           <div class="mb-4">
             <label for="schoolId" class="mb-2">School</label>
             <select id="schoolId" class="form-control mb-4" th:field="*{schoolId}">
+              <option th:value="${null}">None</option>
               <option th:each="school : ${schools}" th:value="${school.id}" th:text="${school.name}"></option>
             </select>
           </div>
