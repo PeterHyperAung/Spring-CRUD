@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: springcrud
+  datasource:
+    username: root
+    password: rootpassword
+    type: com.mysql.cj.jdbc.MysqlDataSource
+    url: jdbc:mysql://localhost:3306/springcrud
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  error:
+    whitelabel:
+      enabled: false
