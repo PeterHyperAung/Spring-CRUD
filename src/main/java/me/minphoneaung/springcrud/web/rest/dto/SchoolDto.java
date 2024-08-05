@@ -1,4 +1,4 @@
-package me.minphoneaung.springcrud.schools;
+package me.minphoneaung.springcrud.web.rest.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 

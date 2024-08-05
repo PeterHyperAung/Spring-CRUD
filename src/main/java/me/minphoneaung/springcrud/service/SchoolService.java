@@ -1,11 +1,16 @@
-package me.minphoneaung.springcrud.schools;
+package me.minphoneaung.springcrud.service;
 
 import me.minphoneaung.springcrud.dto.PaginationResponseDto;
+import me.minphoneaung.springcrud.entities.School;
 import me.minphoneaung.springcrud.errors.ResourceNotFoundException;
-import me.minphoneaung.springcrud.students.Student;
-import me.minphoneaung.springcrud.students.StudentRepository;
+import me.minphoneaung.springcrud.repository.SchoolRepository;
+import me.minphoneaung.springcrud.entities.Student;
+import me.minphoneaung.springcrud.repository.StudentRepository;
+import me.minphoneaung.springcrud.web.rest.dto.SchoolDto;
+import me.minphoneaung.springcrud.web.rest.mapper.SchoolMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,26 +40,34 @@ public class SchoolService {
         return result;
     }
 
-    public PaginationResponseDto<SchoolDto> getAllSchools(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
-        var schools = repository.findAll(pageable);
+    public List<SchoolDto> getAllSchools(int start, int length, String searchValue, int column, String direction) {
+        Sort sort = Sort.by(Sort.Order.by(getSortColumn(column)).with(Sort.Direction.fromString(direction)));
+        PageRequest pageRequest = PageRequest.of(start / length, length, sort);
+        var schools = repository.findByNameContainingIgnoreCase(searchValue, pageRequest);
         var result = new ArrayList<SchoolDto>();
         for (School school: schools) {
             result.add(new SchoolDto(school.getId(), school.getName()));
         }
+        return result;
+    }
 
-        return new PaginationResponseDto<>(
-                result,
-                pageNo,
-                pageSize,
-                schools.getTotalPages(),
-                result.size()
-        );
+    private String getSortColumn(int column) {
+        switch(column) {
+            case 0:
+                return "id";
+            case 1:
+                return "name";
+        };
+        return "name";
     }
 
     public SchoolDto getSchoolById(Integer id) {
         return mapper.toSchoolDto(repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("School Not Found")));
+    }
+
+    public int countAllSchools() {
+        return (int) repository.count();
     }
 
     public SchoolDto createSchool(SchoolDto dto) {
@@ -64,7 +77,8 @@ public class SchoolService {
     }
 
     public SchoolDto updateSchoolById(Integer id, SchoolDto dto) {
-        var school = repository.findById(id).orElseThrow();
+        var school = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("School Not Found"));
         school.setName(dto.name());
         return mapper.toSchoolDto(repository.save(school));
     }

@@ -1,16 +1,12 @@
-package me.minphoneaung.springcrud.students;
+package me.minphoneaung.springcrud.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.minphoneaung.springcrud.schools.School;
-import org.hibernate.annotations.OnDelete;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 
 @Data

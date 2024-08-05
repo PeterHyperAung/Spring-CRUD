@@ -1,16 +1,19 @@
-package me.minphoneaung.springcrud.students;
+package me.minphoneaung.springcrud.web.rest;
 
 import me.minphoneaung.springcrud.dto.PaginationResponseDto;
+import me.minphoneaung.springcrud.service.StudentService;
+import me.minphoneaung.springcrud.web.rest.dto.StudentDto;
+import me.minphoneaung.springcrud.web.rest.dto.StudentResponseDto;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/students")
-public class StudentController {
+public class StudentResource {
 
 
     private final StudentService service;
 
-    public StudentController(StudentService service) {
+    public StudentResource(StudentService service) {
         this.service = service;
     }
 

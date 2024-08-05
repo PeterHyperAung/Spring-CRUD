@@ -1,11 +1,11 @@
-package me.minphoneaung.springcrud.schools;
+package me.minphoneaung.springcrud.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.minphoneaung.springcrud.students.Student;
+import me.minphoneaung.springcrud.entities.Student;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 

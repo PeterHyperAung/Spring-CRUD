@@ -1,5 +1,6 @@
-package me.minphoneaung.springcrud.students;
+package me.minphoneaung.springcrud.repository;
 
+import me.minphoneaung.springcrud.entities.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

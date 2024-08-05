@@ -1,6 +1,6 @@
-package me.minphoneaung.springcrud.students;
+package me.minphoneaung.springcrud.web.rest.dto;
 
-import me.minphoneaung.springcrud.schools.School;
+import me.minphoneaung.springcrud.entities.School;
 
 import java.time.LocalDate;
 

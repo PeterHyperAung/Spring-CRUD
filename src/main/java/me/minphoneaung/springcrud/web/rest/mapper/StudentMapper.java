@@ -1,7 +1,9 @@
-package me.minphoneaung.springcrud.students;
+package me.minphoneaung.springcrud.web.rest.mapper;
 
-import me.minphoneaung.springcrud.schools.School;
-import me.minphoneaung.springcrud.schools.SchoolRepository;
+import me.minphoneaung.springcrud.entities.Student;
+import me.minphoneaung.springcrud.repository.SchoolRepository;
+import me.minphoneaung.springcrud.web.rest.dto.StudentDto;
+import me.minphoneaung.springcrud.web.rest.dto.StudentResponseDto;
 import org.springframework.stereotype.Service;
 
 @Service

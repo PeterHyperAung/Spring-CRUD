@@ -1,8 +1,14 @@
-package me.minphoneaung.springcrud.students;
+package me.minphoneaung.springcrud.service;
 
 import me.minphoneaung.springcrud.dto.PaginationResponseDto;
+import me.minphoneaung.springcrud.entities.Student;
 import me.minphoneaung.springcrud.errors.EmailAlreadyExistsException;
-import me.minphoneaung.springcrud.schools.SchoolRepository;
+import me.minphoneaung.springcrud.errors.ResourceNotFoundException;
+import me.minphoneaung.springcrud.repository.SchoolRepository;
+import me.minphoneaung.springcrud.repository.StudentRepository;
+import me.minphoneaung.springcrud.web.rest.dto.StudentDto;
+import me.minphoneaung.springcrud.web.rest.mapper.StudentMapper;
+import me.minphoneaung.springcrud.web.rest.dto.StudentResponseDto;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -61,7 +67,8 @@ public class StudentService {
     }
 
     public StudentResponseDto getStudentById(Integer id) {
-        return mapper.toStudentResponseDto(repository.findById(id).orElseThrow());
+        return mapper.toStudentResponseDto(repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found")));
     }
 
     public StudentResponseDto createStudent(StudentDto dto) {
@@ -74,6 +81,7 @@ public class StudentService {
             var school = schoolRepository.findById(dto.schoolId()).orElseThrow();
             student.setSchool(school);
         }
+
         try {
             return mapper.toStudentResponseDto(repository.save(student));
         } catch(DataIntegrityViolationException e) {
@@ -89,7 +97,8 @@ public class StudentService {
         student.setStartedAt(dto.startedAt());
         student.setAge(dto.age());
         if(dto.schoolId() != null) {
-            var school = schoolRepository.findById(dto.schoolId()).orElseThrow();
+            var school = schoolRepository.findById(dto.schoolId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
             student.setSchool(school);
         } else {
             student.setSchool(null);
@@ -100,6 +109,5 @@ public class StudentService {
     public void deleteStudentById(Integer id) {
         repository.deleteById(id);
     }
-
 
 }

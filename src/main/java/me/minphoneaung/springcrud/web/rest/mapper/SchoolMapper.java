@@ -1,8 +1,8 @@
-package me.minphoneaung.springcrud.schools;
+package me.minphoneaung.springcrud.web.rest.mapper;
 
+import me.minphoneaung.springcrud.entities.School;
+import me.minphoneaung.springcrud.web.rest.dto.SchoolDto;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class SchoolMapper {
