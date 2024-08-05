@@ -1,11 +1,13 @@
 package me.minphoneaung.springcrud.students;
 
+import me.minphoneaung.springcrud.dto.PaginationResponseDto;
 import me.minphoneaung.springcrud.errors.EmailAlreadyExistsException;
 import me.minphoneaung.springcrud.schools.SchoolRepository;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +37,27 @@ public class StudentService {
         }
 
         return result;
+    }
+
+    public PaginationResponseDto<StudentResponseDto> getAllStudents(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        var students = repository.findAll(pageable);
+        ArrayList<StudentResponseDto> result = new ArrayList<>();
+        for (Student student: students) {
+            result.add(new StudentResponseDto(student.getId(),
+                    student.getName(), student.getEmail(),
+                    student.getAge(), student.getSchool(),
+                    student.getSchool() == null ? null : student.getSchool().getId(),
+                    student.getStartedAt()));
+        }
+
+        return new PaginationResponseDto<>(
+                result,
+                pageNo,
+                pageSize,
+                students.getTotalPages(),
+                result.size()
+        );
     }
 
     public StudentResponseDto getStudentById(Integer id) {

@@ -13,8 +13,8 @@
             <a th:href="@{/students/create}" class="btn btn-info">Create</a>
         </div>
         <h1 class="h2 py-4 text-center">Students List</h1>
-        <div class="px-5">
-            <table class="table">
+        <div class="px-5 table-responsive">
+            <table class="table" style="min-width: 800px;">
                 <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -27,7 +27,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:if="${students.size() == 0}">
+                <tr th:if="${itemsCountInCurrentPage == 0}">
                     <td colspan="100%" class="text-center">No Students</td>
                 </tr>
                 <tr th:each="student, stats : ${students}">
@@ -48,6 +48,7 @@
                 </tbody>
             </table>
         </div>
+        <div th:replace="fragments/pagination-nav.html :: pagination(path='/')"></div>
     </main>
 
 

@@ -4,6 +4,7 @@ package me.minphoneaung.springcrud.views;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import me.minphoneaung.springcrud.dto.PaginationResponseDto;
 import me.minphoneaung.springcrud.schools.SchoolDto;
 import me.minphoneaung.springcrud.schools.SchoolService;
 import me.minphoneaung.springcrud.students.StudentDto;
@@ -16,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class ViewController {
 
-    private StudentService studentService;
-    private SchoolService schoolService;
+    private final StudentService studentService;
+    private final SchoolService schoolService;
 
     public ViewController(StudentService studentService, SchoolService schoolService) {
         this.studentService = studentService;
@@ -26,10 +27,24 @@ public class ViewController {
 
 
     @GetMapping
-    public String homePage(Model model) {
-        var students = studentService.getAllStudents();
-        model.addAttribute("students", students);
+    public String homePage(Model model,
+           @RequestParam(value="pageNo", defaultValue = "0") int pageNo,
+           @RequestParam(value="pageSize", defaultValue = "10") int pageSize)
+    {
+        pageNo = pageNo < 0 ? 0: pageNo;
+        var students = studentService.getAllStudents(pageNo, pageSize);
+        addPaginationAttribute(model, students, "students");
         return "home";
+    }
+
+    private <T> void addPaginationAttribute(Model model, PaginationResponseDto<T> resource, String resourceName) {
+        model.addAttribute("pageNo", resource.pageNo());
+        model.addAttribute("previousPage", resource.pageNo() - 1);
+        model.addAttribute("nextPage", resource.pageNo() + 1);
+        model.addAttribute("pageSize", resource.pageSize());
+        model.addAttribute("totalPages", resource.totalPages());
+        model.addAttribute("itemsCountInCurrentPage", resource.itemsCountInCurrentPage());
+        model.addAttribute(resourceName, resource.data());
     }
 
     @GetMapping("/students/create")
@@ -69,8 +84,13 @@ public class ViewController {
     }
 
     @GetMapping("/schools")
-    public String schoolListPage(Model model) {
-        model.addAttribute("schools", schoolService.getAllSchools());
+    public String schoolListPage(Model model,
+         @RequestParam(value="pageNo", defaultValue = "0") int pageNo,
+         @RequestParam(value="pageSize", defaultValue = "10") int pageSize
+    ) {
+        pageNo = pageNo < 0 ? 0: pageNo;
+        var schools = schoolService.getAllSchools(pageNo, pageSize);
+        addPaginationAttribute(model, schools, "schools");
         return "school";
     }
 

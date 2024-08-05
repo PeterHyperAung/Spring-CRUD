@@ -1,8 +1,7 @@
 package me.minphoneaung.springcrud.schools;
 
+import me.minphoneaung.springcrud.dto.PaginationResponseDto;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/schools")
@@ -21,8 +20,11 @@ public class SchoolController {
     }
 
     @GetMapping
-    private List<SchoolDto> getSchools() {
-        return service.getAllSchools();
+    private PaginationResponseDto<SchoolDto> getSchools(
+            @RequestParam(value="pageNo", defaultValue = "0") int pageNo,
+            @RequestParam(value="pageSize", defaultValue = "10") int pageSize
+    ) {
+        return service.getAllSchools(pageNo, pageSize);
     }
 
     @GetMapping("/{id}")

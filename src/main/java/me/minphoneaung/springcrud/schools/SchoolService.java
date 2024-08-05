@@ -1,12 +1,15 @@
 package me.minphoneaung.springcrud.schools;
 
+import me.minphoneaung.springcrud.dto.PaginationResponseDto;
+import me.minphoneaung.springcrud.errors.ResourceNotFoundException;
 import me.minphoneaung.springcrud.students.Student;
 import me.minphoneaung.springcrud.students.StudentRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SchoolService {
@@ -32,8 +35,26 @@ public class SchoolService {
         return result;
     }
 
+    public PaginationResponseDto<SchoolDto> getAllSchools(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        var schools = repository.findAll(pageable);
+        var result = new ArrayList<SchoolDto>();
+        for (School school: schools) {
+            result.add(new SchoolDto(school.getId(), school.getName()));
+        }
+
+        return new PaginationResponseDto<>(
+                result,
+                pageNo,
+                pageSize,
+                schools.getTotalPages(),
+                result.size()
+        );
+    }
+
     public SchoolDto getSchoolById(Integer id) {
-        return mapper.toSchoolDto(repository.findById(id).orElseThrow());
+        return mapper.toSchoolDto(repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("School Not Found")));
     }
 
     public SchoolDto createSchool(SchoolDto dto) {

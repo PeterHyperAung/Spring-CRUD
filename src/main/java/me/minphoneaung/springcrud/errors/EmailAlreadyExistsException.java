@@ -14,8 +14,6 @@ public class EmailAlreadyExistsException extends RuntimeException {
         return message;
     }
 
-    public EmailAlreadyExistsException() {}
-
     public EmailAlreadyExistsException(String msg, String viewName) {
         super(msg);
         this.message = msg;
