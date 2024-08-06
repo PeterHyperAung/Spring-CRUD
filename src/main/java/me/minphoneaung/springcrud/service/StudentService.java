@@ -50,7 +50,8 @@ public class StudentService {
     public List<StudentResponseDto> getAllSchools(int start, int length, String searchValue, int column, String direction) {
         Sort sort = Sort.by(Sort.Order.by(getSortColumn(column)).with(Sort.Direction.fromString(direction)));
         PageRequest pageRequest = PageRequest.of(start / length, length, sort);
-        var students = repository.findByNameContainingIgnoreCase(searchValue, pageRequest);
+        var students = repository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrSchool_NameContainingIgnoreCase
+                (searchValue, searchValue, searchValue, pageRequest);
         var result = new ArrayList<StudentResponseDto>();
         for (Student student: students) {
             result.add(mapper.toStudentResponseDto(student));

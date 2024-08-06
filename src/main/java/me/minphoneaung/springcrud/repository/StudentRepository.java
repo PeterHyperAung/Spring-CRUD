@@ -10,7 +10,7 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 
     List<Student> findBySchoolId(Integer schoolId);
 
-    List<Student> findByNameContainingIgnoreCase(String name, PageRequest pageRequest);
+    List<Student> findByNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrSchool_NameContainingIgnoreCase(String name, String email, String schoolName, PageRequest pageRequest);
 
     long countByNameContainingIgnoreCase(String name);
 }

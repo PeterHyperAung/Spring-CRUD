@@ -33,10 +33,6 @@
             ajax: {
                 url: "/api/students",
                 dataSrc: 'data',
-                dataFilter: function(data) {
-                    console.log("Raw AJAX response: ", data); // Log raw response
-                    return data;
-                }
             },
             columns: [
                 {
@@ -65,7 +61,7 @@
                     data: "school",
                     render: function(data, type, row, meta) {
                         return `
-                            <span>${row.name}</span>
+                            <span>${row.school ? row.school.name: "No School"}</span>
                         `
                     }
                 },
@@ -86,8 +82,8 @@
                     render: function(data, type, row, meta) {
                         return `
                     <div class="d-flex gap-2">
-                        <a href="/schools/edit/${row.id}" class="btn btn-sm btn-primary">Edit</a>
-                        <form method="POST" action="/schools/delete/${row.id}">
+                        <a href="/students/edit/${row.id}" class="btn btn-sm btn-primary">Edit</a>
+                        <form method="POST" action="/students/delete/${row.id}">
                             <button class="btn btn-sm btn-danger" type="submit">Delete</button>
                         </form>
                     </div>
@@ -103,7 +99,7 @@
                 }
             ],
             processing: true,
-            serverSide: true,
+            serverSide: true
         });
     </script>
 </body>
