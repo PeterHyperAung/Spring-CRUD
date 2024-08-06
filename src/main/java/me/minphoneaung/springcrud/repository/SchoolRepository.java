@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface SchoolRepository extends JpaRepository<School, Integer> {
     List<School> findByNameContainingIgnoreCase(String name, PageRequest pageRequest);
+    long countByNameContainingIgnoreCase(String name);
 }

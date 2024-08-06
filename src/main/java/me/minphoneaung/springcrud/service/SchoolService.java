@@ -70,6 +70,10 @@ public class SchoolService {
         return (int) repository.count();
     }
 
+    public int countFilteredSchools(String searchValue) {
+        return (int) repository.countByNameContainingIgnoreCase(searchValue);
+    }
+
     public SchoolDto createSchool(SchoolDto dto) {
         var school = new School();
         school.setName(dto.name());

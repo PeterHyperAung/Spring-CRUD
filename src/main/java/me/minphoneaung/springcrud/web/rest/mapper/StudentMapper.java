@@ -1,10 +1,16 @@
 package me.minphoneaung.springcrud.web.rest.mapper;
 
+import me.minphoneaung.springcrud.entities.School;
 import me.minphoneaung.springcrud.entities.Student;
 import me.minphoneaung.springcrud.repository.SchoolRepository;
+import me.minphoneaung.springcrud.web.rest.dto.DataTableResponseDto;
+import me.minphoneaung.springcrud.web.rest.dto.SchoolDto;
 import me.minphoneaung.springcrud.web.rest.dto.StudentDto;
 import me.minphoneaung.springcrud.web.rest.dto.StudentResponseDto;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class StudentMapper {
@@ -35,6 +41,23 @@ public class StudentMapper {
                 student.getSchool() == null ? null : student.getSchool().getId(),
                 student.getStartedAt()
         );
+    }
+
+    public DataTableResponseDto<StudentResponseDto> toDataResponseDtoFromStudent(Integer draw, Integer recordsTotal,
+                                                                        Integer recordsFiltered, List<Student> students) {
+        var result = new ArrayList<StudentResponseDto>();
+        for (Student student: students) {
+            result.add(toStudentResponseDto(student));
+        }
+        return new DataTableResponseDto<>(draw, recordsTotal, recordsFiltered, result);
+    }
+
+
+    public DataTableResponseDto<StudentResponseDto> toDataResponseDtoFromStudentResponseDto(Integer draw, long recordsTotal,
+                                                                          long recordsFiltered, List<StudentResponseDto> students) {
+        var result = new ArrayList<StudentResponseDto>();
+        result.addAll(students);
+        return new DataTableResponseDto<>(draw, recordsTotal, recordsFiltered, result);
     }
 
 }
