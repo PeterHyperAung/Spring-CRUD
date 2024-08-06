@@ -1,18 +1,12 @@
 package me.minphoneaung.springcrud.web.rest;
 
-import me.minphoneaung.springcrud.dto.PaginationResponseDto;
-import me.minphoneaung.springcrud.entities.School;
 import me.minphoneaung.springcrud.web.rest.dto.DataTableResponseDto;
 import me.minphoneaung.springcrud.web.rest.dto.SchoolDto;
 import me.minphoneaung.springcrud.service.SchoolService;
 import me.minphoneaung.springcrud.web.rest.mapper.SchoolMapper;
-import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/api/schools")
@@ -31,11 +25,6 @@ public class SchoolResource {
     private String helloworld() {
         return "hello world";
     }
-
-//    @GetMapping("")
-//    public List<SchoolDto> getUsersData() {
-//        return service.getAllSchools();
-//    }
 
     @GetMapping("")
     private DataTableResponseDto<SchoolDto> getSchools(
@@ -60,7 +49,7 @@ public class SchoolResource {
     }
 
     @PostMapping
-    private SchoolDto getSchool(@RequestBody SchoolDto dto) {
+    private SchoolDto createSchool(@RequestBody SchoolDto dto) {
         return service.createSchool(dto);
     }
 

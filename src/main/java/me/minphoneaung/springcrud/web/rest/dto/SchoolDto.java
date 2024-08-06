@@ -7,6 +7,9 @@ public record SchoolDto(
         Integer id,
 
         @NotEmpty(message = "Name should not be empty")
-        String name
+        String name,
+
+        @NotEmpty(message = "Principal name should not be empty")
+        String principal
 ) {
 }

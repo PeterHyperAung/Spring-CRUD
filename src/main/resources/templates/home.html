@@ -12,7 +12,11 @@
     <header th:insert="fragments/header.html"></header>
     <main class="mb-5">
         <div class="mt-3 px-5">
-            <a th:href="@{/students/create}" class="btn btn-info">Create</a>
+            <a th:href="@{/students/mutate/0}" class="btn btn-info">Create</a>
+        </div>
+        <div th:text="${success}" class="alert alert-success"></div>
+        <div class="my-3" th:if="${success != null}">
+            <div class="alert alert-success" th:text="${success}"></div>
         </div>
         <h1 class="h2 py-4 text-center">Students List</h1>
         <div class="px-5 table-responsive">
@@ -51,9 +55,9 @@
                     data: "email"
                 },
                 {
-                    name: "age",
-                    title: "Age",
-                    data: "age"
+                    name: "dateOfBirth",
+                    title: "Date Of Birth",
+                    data: "dateOfBirth"
                 },
                 {
                     name: "school",
@@ -82,7 +86,7 @@
                     render: function(data, type, row, meta) {
                         return `
                     <div class="d-flex gap-2">
-                        <a href="/students/edit/${row.id}" class="btn btn-sm btn-primary">Edit</a>
+                        <a href="/students/mutate/${row.id}" class="btn btn-sm btn-primary">Edit</a>
                         <form method="POST" action="/students/delete/${row.id}">
                             <button class="btn btn-sm btn-danger" type="submit">Delete</button>
                         </form>

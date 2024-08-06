@@ -34,7 +34,7 @@ public class SchoolService {
         var schools = repository.findAll();
         var result = new ArrayList<SchoolDto>();
         for (School school: schools) {
-            result.add(new SchoolDto(school.getId(), school.getName()));
+            result.add(new SchoolDto(school.getId(), school.getName(), school.getPrincipal()));
         }
 
         return result;
@@ -46,7 +46,7 @@ public class SchoolService {
         var schools = repository.findByNameContainingIgnoreCase(searchValue, pageRequest);
         var result = new ArrayList<SchoolDto>();
         for (School school: schools) {
-            result.add(new SchoolDto(school.getId(), school.getName()));
+            result.add(new SchoolDto(school.getId(), school.getName(), school.getPrincipal()));
         }
         return result;
     }

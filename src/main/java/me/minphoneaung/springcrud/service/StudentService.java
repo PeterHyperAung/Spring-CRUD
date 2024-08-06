@@ -18,7 +18,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class StudentService {
@@ -39,7 +41,7 @@ public class StudentService {
         for (Student student: students) {
             result.add(new StudentResponseDto(student.getId(),
                     student.getName(), student.getEmail(),
-                    student.getAge(), student.getSchool(),
+                    student.getDateOfBirth(), student.getSchool(),
                     student.getSchool() == null ? null : student.getSchool().getId(),
                     student.getStartedAt()));
         }
@@ -84,7 +86,7 @@ public class StudentService {
         for (Student student: students) {
             result.add(new StudentResponseDto(student.getId(),
                     student.getName(), student.getEmail(),
-                    student.getAge(), student.getSchool(),
+                    student.getDateOfBirth(), student.getSchool(),
                     student.getSchool() == null ? null : student.getSchool().getId(),
                     student.getStartedAt()));
         }
@@ -99,35 +101,30 @@ public class StudentService {
     }
 
     public StudentResponseDto getStudentById(Integer id) {
-        return mapper.toStudentResponseDto(repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found")));
+        return mapper.toStudentResponseDto(repository.findById(id).orElse(null));
     }
 
-    public StudentResponseDto createStudent(StudentDto dto) {
+    public StudentResponseDto createStudent(StudentDto dto) throws DataIntegrityViolationException {
         var student = new Student();
         student.setName(dto.name());
         student.setEmail(dto.email());
-        student.setAge(dto.age());
+        student.setDateOfBirth(dto.dateOfBirth());
         student.setStartedAt(dto.startedAt());
         if(dto.schoolId() != null) {
-            var school = schoolRepository.findById(dto.schoolId()).orElseThrow();
+            var school = schoolRepository.findById(dto.schoolId()).orElse(null);
             student.setSchool(school);
         }
 
-        try {
-            return mapper.toStudentResponseDto(repository.save(student));
-        } catch(DataIntegrityViolationException e) {
-            throw new EmailAlreadyExistsException("Email already exists", "create-student");
-        }
+        return mapper.toStudentResponseDto(repository.save(student));
     }
 
-    public StudentResponseDto updateStudentById(Integer id, StudentDto dto) {
+    public StudentResponseDto updateStudentById(Integer id, StudentDto dto) throws DataIntegrityViolationException {
         var student = repository.findById(id).orElseThrow();
         student.setId(id);
         student.setName(dto.name());
         student.setEmail(dto.email());
         student.setStartedAt(dto.startedAt());
-        student.setAge(dto.age());
+        student.setDateOfBirth(dto.dateOfBirth());
         if(dto.schoolId() != null) {
             var school = schoolRepository.findById(dto.schoolId())
                     .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
@@ -135,6 +132,7 @@ public class StudentService {
         } else {
             student.setSchool(null);
         }
+
         return mapper.toStudentResponseDto(repository.save(student));
     }
 

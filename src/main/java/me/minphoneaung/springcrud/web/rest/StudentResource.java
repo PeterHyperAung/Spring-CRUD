@@ -7,6 +7,7 @@ import me.minphoneaung.springcrud.web.rest.dto.SchoolDto;
 import me.minphoneaung.springcrud.web.rest.dto.StudentDto;
 import me.minphoneaung.springcrud.web.rest.dto.StudentResponseDto;
 import me.minphoneaung.springcrud.web.rest.mapper.StudentMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,22 +50,22 @@ public class StudentResource {
     }
 
     @GetMapping("/{id}")
-    private StudentResponseDto getSchool(@PathVariable Integer id) {
+    private StudentResponseDto getStudent(@PathVariable Integer id) {
         return service.getStudentById(id);
     }
 
     @PostMapping
-    private StudentResponseDto getSchool(@RequestBody StudentDto dto) {
+    private StudentResponseDto createStudent(@RequestBody StudentDto dto) {
         return service.createStudent(dto);
     }
 
     @PatchMapping("/{id}")
-    private StudentResponseDto updateSchool(@PathVariable Integer id, @RequestBody StudentDto body) {
+    private StudentResponseDto updateStudent(@PathVariable Integer id, @RequestBody StudentDto body) {
         return service.updateStudentById(id, body);
     }
 
     @DeleteMapping("{id}")
-    private void deleteSchool(@PathVariable Integer id) {
+    private void deleteStudent(@PathVariable Integer id) {
         service.deleteStudentById(id);
     }
 

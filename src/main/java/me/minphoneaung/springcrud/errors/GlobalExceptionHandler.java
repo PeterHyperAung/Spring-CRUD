@@ -10,14 +10,14 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ModelAndView handleDataIntegrityViolationException(EmailAlreadyExistsException ex) {
-        var dto = new StudentDto("", "", null, null, null);
-        ModelAndView mav = new ModelAndView(ex.getViewName() + ".html");
-        mav.addObject("emailDuplicateError", ex.getMessage());
-        mav.addObject("student", dto);
-        return mav;
-    };
+//    @ExceptionHandler(EmailAlreadyExistsException.class)
+//    public ModelAndView handleDataIntegrityViolationException(EmailAlreadyExistsException ex) {
+//        var dto = new StudentDto(0, "", "", null, null, null);
+//        ModelAndView mav = new ModelAndView(ex.getViewName() + ".html");
+//        mav.addObject("emailDuplicateError", ex.getMessage());
+//        mav.addObject("student", dto);
+//        return mav;
+//    };
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public String handleResourceNotFoundException(ResourceNotFoundException ex) {

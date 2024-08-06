@@ -22,6 +22,8 @@ public class School {
 
     private String name;
 
+    private String principal;
+
     @OneToMany(mappedBy = "school", cascade = CascadeType.PERSIST)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonBackReference

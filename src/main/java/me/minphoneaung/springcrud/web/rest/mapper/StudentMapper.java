@@ -23,8 +23,9 @@ public class StudentMapper {
 
     public Student toStudent(StudentDto dto) {
         var student = new Student();
+        student.setId(dto.id());
         student.setName(dto.name());
-        student.setAge(dto.age());
+        student.setDateOfBirth(dto.dateOfBirth());
         student.setEmail(dto.email());
         var school = schoolRepository.findById(dto.schoolId()).orElseThrow();
         student.setSchool(school);
@@ -32,19 +33,20 @@ public class StudentMapper {
     }
 
     public StudentResponseDto toStudentResponseDto(Student student) {
+        if(student == null) return null;
         return new StudentResponseDto(
                 student.getId(),
                 student.getName(),
                 student.getEmail(),
-                student.getAge(),
+                student.getDateOfBirth(),
                 student.getSchool(),
                 student.getSchool() == null ? null : student.getSchool().getId(),
                 student.getStartedAt()
         );
     }
 
-    public DataTableResponseDto<StudentResponseDto> toDataResponseDtoFromStudent(Integer draw, Integer recordsTotal,
-                                                                        Integer recordsFiltered, List<Student> students) {
+    public DataTableResponseDto<StudentResponseDto> toDataResponseDtoFromStudent
+            (Integer draw, Integer recordsTotal, Integer recordsFiltered, List<Student> students) {
         var result = new ArrayList<StudentResponseDto>();
         for (Student student: students) {
             result.add(toStudentResponseDto(student));
@@ -53,8 +55,8 @@ public class StudentMapper {
     }
 
 
-    public DataTableResponseDto<StudentResponseDto> toDataResponseDtoFromStudentResponseDto(Integer draw, long recordsTotal,
-                                                                          long recordsFiltered, List<StudentResponseDto> students) {
+    public DataTableResponseDto<StudentResponseDto> toDataResponseDtoFromStudentResponseDto
+            (Integer draw, long recordsTotal, long recordsFiltered, List<StudentResponseDto> students) {
         var result = new ArrayList<StudentResponseDto>();
         result.addAll(students);
         return new DataTableResponseDto<>(draw, recordsTotal, recordsFiltered, result);

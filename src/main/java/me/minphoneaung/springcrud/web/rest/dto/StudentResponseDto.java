@@ -8,7 +8,7 @@ public record StudentResponseDto (
         Integer id,
         String name,
         String email,
-        Integer age,
+        LocalDate dateOfBirth,
         School school,
 
         Integer schoolId,

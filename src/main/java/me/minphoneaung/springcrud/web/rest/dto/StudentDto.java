@@ -2,11 +2,13 @@ package me.minphoneaung.springcrud.web.rest.dto;
 
 
 import jakarta.validation.constraints.*;
+import me.minphoneaung.springcrud.annotations.ValidateDateOfBirth;
 
 import java.time.LocalDate;
 
 public record StudentDto(
 
+        Integer id,
         @NotEmpty(message = "Name is required")
         String name,
 
@@ -14,10 +16,9 @@ public record StudentDto(
         @Email(message = "Email should be valid")
         String email,
 
-        @NotNull(message = "Age is required")
-        @Min(value = 3, message = "Age should be greater than 3")
-        @Max(value = 100, message = "Age should be less than 100")
-        Integer age,
+        @NotNull(message = "Date of birth is required")
+        @ValidateDateOfBirth
+        LocalDate dateOfBirth,
         Integer schoolId,
 
         LocalDate startedAt

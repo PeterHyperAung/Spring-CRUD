@@ -1,6 +1,7 @@
 package me.minphoneaung.springcrud.web.controller;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import me.minphoneaung.springcrud.web.rest.dto.SchoolDto;
 import me.minphoneaung.springcrud.service.SchoolService;
 import org.springframework.stereotype.Controller;
@@ -8,31 +9,21 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+@AllArgsConstructor
 @Controller
 @RequestMapping(path = "/schools")
 public class SchoolViewController extends ViewController {
 
     private final SchoolService schoolService;
 
-    public SchoolViewController(SchoolService schoolService) {
-        this.schoolService = schoolService;
-    }
-
     @GetMapping("")
-    public String schoolsList(Model model,
-                                 @RequestParam(value="pageNo", defaultValue = "0") int pageNo,
-                                 @RequestParam(value="pageSize", defaultValue = "10") int pageSize
-    ) {
-//        pageNo = pageNo < 0 ? 0: pageNo;
-//        var schools = schoolService.getAllSchools(pageNo, pageSize);
-//        addPaginationAttribute(model, schools, "schools");
+    public String schoolsList() {
         return "school";
     }
 
-
     @GetMapping("/create")
     public String showCreateForm(Model model) {
-        model.addAttribute("school", new SchoolDto(null, ""));
+        model.addAttribute("school", new SchoolDto(null, "", ""));
         return "create-school";
     }
 

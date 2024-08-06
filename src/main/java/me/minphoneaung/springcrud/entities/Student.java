@@ -24,7 +24,7 @@ public class Student {
     @Column(unique = true)
     private String email;
 
-    private Integer age;
+    private LocalDate dateOfBirth;
 
     @ManyToOne
     @JoinColumn(name = "school_id", nullable = true)

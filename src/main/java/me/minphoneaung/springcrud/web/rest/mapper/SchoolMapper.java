@@ -13,13 +13,15 @@ public class SchoolMapper {
     public School toSchool(SchoolDto dto) {
         var school = new School();
         school.setName(dto.name());
+        school.setName(dto.principal());
         return school;
     }
 
     public SchoolDto toSchoolDto(School school) {
         return new SchoolDto(
                 school.getId(),
-                school.getName()
+                school.getName(),
+                school.getPrincipal()
         );
     }
 
