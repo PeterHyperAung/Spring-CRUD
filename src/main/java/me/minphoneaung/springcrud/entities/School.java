@@ -5,9 +5,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.minphoneaung.springcrud.entities.Student;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 
@@ -24,8 +21,7 @@ public class School {
 
     private String principal;
 
-    @OneToMany(mappedBy = "school", cascade = CascadeType.PERSIST)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL)
     @JsonBackReference
     private List<Student> students;
 }

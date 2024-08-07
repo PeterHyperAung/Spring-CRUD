@@ -2,12 +2,13 @@ package me.minphoneaung.springcrud.web.rest;
 
 import lombok.AllArgsConstructor;
 import me.minphoneaung.springcrud.service.StudentService;
-import me.minphoneaung.springcrud.web.rest.dto.DataTableResponseDto;
+import me.minphoneaung.springcrud.web.rest.dto.DataTablesInput;
+import me.minphoneaung.springcrud.web.rest.dto.DataTablesOutput;
 import me.minphoneaung.springcrud.web.rest.dto.StudentDto;
 import me.minphoneaung.springcrud.web.rest.mapper.StudentMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/students")
@@ -24,22 +25,15 @@ public class StudentResource {
         return "hello world";
     }
 
-    @GetMapping
-    private DataTableResponseDto<StudentDto> getStudents(
-            @RequestParam(value="draw", defaultValue = "0") int draw,
-            @RequestParam(value="start", defaultValue = "0") int start,
-            @RequestParam(value="length", defaultValue = "10") int length,
-            @RequestParam(value = "search[value]", defaultValue = "") String searchValue,
-            @RequestParam(value = "order[0][column]", defaultValue = "0") int column,
-            @RequestParam(value = "order[0][dir]", defaultValue = "asc") String direction
+    @PostMapping("/pagination")
+    private DataTablesOutput<StudentDto> getStudents(
+            @RequestBody DataTablesInput dataTablesInput
     )
     {
-        long totalRecords = service.countAllStudent();
-        long filteredRecords = service.countFilteredStudent(searchValue);
-
-        List<StudentDto> students = service.getAllSchools(start, length, searchValue, column, direction);
-
-        return toDataTableResponseDtoFromDto(draw, totalRecords, filteredRecords, students);
+        System.out.println("Hello");
+        System.out.println(dataTablesInput);
+        Page<StudentDto> students = mapper.toDtoPage(service.getAllStudents(dataTablesInput));
+        return DataTablesOutput.createDataTableOutput(students, dataTablesInput);
     }
 
     @GetMapping("/{id}")
@@ -49,12 +43,12 @@ public class StudentResource {
 
     @PostMapping
     private StudentDto createStudent(@RequestBody StudentDto dto) {
-        return service.createStudent(dto);
+        return service.saveStudent(dto);
     }
 
     @PatchMapping("/{id}")
     private StudentDto updateStudent(@PathVariable Integer id, @RequestBody StudentDto body) {
-        return service.updateStudentById(id, body);
+        return service.saveStudent(body);
     }
 
     @DeleteMapping("{id}")
@@ -62,11 +56,5 @@ public class StudentResource {
         service.deleteStudentById(id);
     }
 
-
-    private DataTableResponseDto<StudentDto> toDataTableResponseDtoFromDto(
-            Integer draw, long recordsTotal, long recordsFiltered, List<StudentDto> students
-    ) {
-        return new DataTableResponseDto<>(draw, recordsTotal, recordsFiltered, students);
-    }
 
 }

@@ -12,32 +12,29 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.format.DateTimeFormatter;
-
-@RequiredArgsConstructor
 @Controller
-public class StudentViewController extends ViewController {
+@RequiredArgsConstructor
+@RequestMapping("/students")
+public class StudentController extends ErrorController {
 
     private final StudentService studentService;
     private final SchoolService schoolService;
-    private final DateTimeFormatter DATETIMEFORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @GetMapping
     public String list() {
         return "students-list";
     }
 
-    @GetMapping("/students/mutate/{id}")
+    @GetMapping("/student/{id}")
     public String showStudentForm(@PathVariable(value = "id") Integer id, Model model) {
         var dto = studentService.getStudentById(id);
-
         model.addAttribute("student", dto);
         model.addAttribute("schools", schoolService.getAllSchools());
         return "student-form";
     }
 
-    @PostMapping("/students/mutate/{id}")
-    public String mutate(@Valid @ModelAttribute("student") StudentDto data, BindingResult bindingResult, Model model) {
+    @PostMapping("/student/{id}")
+    public String createOrUpdate(@Valid @ModelAttribute("student") StudentDto data, BindingResult bindingResult, Model model) {
         model.addAttribute("schools", schoolService.getAllSchools());
 
         if (bindingResult.hasErrors()) {
@@ -45,27 +42,19 @@ public class StudentViewController extends ViewController {
         }
 
         try {
-            var student = studentService.getStudentById(data.id());
-            if(student == null) {
-                studentService.createStudent(data);
-                model.addAttribute("success", "Student created");
-            } else {
-                studentService.updateStudentById(data.id(), data);
-                model.addAttribute("success", "Student updated");
-            }
+            System.out.println(data);
+            studentService.saveStudent(data);
         } catch (DataIntegrityViolationException e) {
             model.addAttribute("emailDuplicateError", "Email already exists!");
             return "student-form";
         }
 
-        return "redirect:/";
+        return "redirect:/students";
     }
 
-    @PostMapping("/students/delete/{id}")
+    @PostMapping("/student/delete/{id}")
     public String delete(@PathVariable Integer id) {
         studentService.deleteStudentById(id);
-        return "redirect:/";
+        return "redirect:/students";
     }
-
-
 }

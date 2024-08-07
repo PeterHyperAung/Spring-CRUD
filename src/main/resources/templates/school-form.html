@@ -22,7 +22,9 @@
             <div class="card-body p-4">
                 <h5 class="card-title mb-3 text-center" th:text="${school.id() == 0 ? 'Create School' : 'Edit School'}"></h5>
 
-                <form action="#" th:action="@{/schools/mutate/{id}(id=${school.id()})}" method="POST" th:object="${school}">
+                <form action="#" th:action="@{/schools/school/{id}(id=${student.id()})}" method="POST" th:object="${school}">
+                    <input th:if="${school.id != 0}" name="id" type="hidden" th:field="*{id}">
+
                     <div class="mb-4">
                         <label for="name" class="mb-2">Name</label>
                         <input name="name" id="name" class="form-control mb-1" th:field="*{name}"/>

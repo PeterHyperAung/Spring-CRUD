@@ -1,10 +1,12 @@
 package me.minphoneaung.springcrud.web.rest;
 
 import lombok.AllArgsConstructor;
-import me.minphoneaung.springcrud.web.rest.dto.DataTableResponseDto;
+import me.minphoneaung.springcrud.web.rest.dto.DataTablesInput;
+import me.minphoneaung.springcrud.web.rest.dto.DataTablesOutput;
 import me.minphoneaung.springcrud.web.rest.dto.SchoolDto;
 import me.minphoneaung.springcrud.service.SchoolService;
 import me.minphoneaung.springcrud.web.rest.mapper.SchoolMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,21 +25,13 @@ public class SchoolResource {
         return "hello world";
     }
 
-    @GetMapping("")
-    private DataTableResponseDto<SchoolDto> getSchools(
-            @RequestParam("draw") int draw,
-            @RequestParam("start") int start,
-            @RequestParam("length") int length,
-            @RequestParam(value = "search[value]", defaultValue = "") String searchValue,
-            @RequestParam(value = "order[0][column]", defaultValue = "0") int column,
-            @RequestParam(value = "order[0][dir]", defaultValue = "asc") String direction
+    @PostMapping("/pagination")
+    private DataTablesOutput<SchoolDto> getSchools(
+            @RequestBody DataTablesInput dataTablesInput
     ) {
-        int totalRecords = service.countAllSchools();
-        int filteredRecords = service.countFilteredSchools(searchValue);
-
-        List<SchoolDto> schools = service.getAllSchools(start, length, searchValue, column, direction);
-
-        return toDataTableResponseDtoFromDto(draw, totalRecords, filteredRecords, schools);
+        System.out.println(dataTablesInput);
+        Page<SchoolDto> schools = mapper.toDtoPage(service.getAllSchools(dataTablesInput));
+        return DataTablesOutput.createDataTableOutput(schools, dataTablesInput);
     }
 
     @GetMapping("/{id}")
@@ -47,22 +41,17 @@ public class SchoolResource {
 
     @PostMapping
     private SchoolDto createSchool(@RequestBody SchoolDto dto) {
-        return service.createSchool(dto);
+        return service.saveSchool(dto);
     }
 
-    @PatchMapping("/{id}")
-    private SchoolDto updateSchool(@PathVariable Integer id, @RequestBody SchoolDto body) {
-        return service.updateSchoolById(id, body);
+    @PatchMapping
+    private SchoolDto updateSchool(@RequestBody SchoolDto body) {
+        return service.saveSchool(body);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     private void deleteSchool(@PathVariable Integer id) {
         service.forceDeleteSchoolById(id);
     }
 
-    private DataTableResponseDto<SchoolDto> toDataTableResponseDtoFromDto(
-            Integer draw, long recordsTotal, long recordsFiltered, List<SchoolDto> schools
-    ) {
-        return new DataTableResponseDto<>(draw, recordsTotal, recordsFiltered, schools);
-    }
 }

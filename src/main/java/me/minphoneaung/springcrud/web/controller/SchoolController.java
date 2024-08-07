@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @Controller
 @RequestMapping(path = "/schools")
-public class SchoolViewController extends ViewController {
+public class SchoolController extends ErrorController {
 
     private final SchoolService schoolService;
 
@@ -21,25 +21,21 @@ public class SchoolViewController extends ViewController {
         return "schools-list";
     }
 
-    @GetMapping("/mutate/{id}")
+    @GetMapping("/school/{id}")
     public String showSchoolForm(@PathVariable Integer id, Model model) {
         var school = schoolService.getSchoolById(id);
         model.addAttribute("school", school);
         return "school-form";
     }
 
-    @PostMapping("/mutate/{id}")
+    @PostMapping("/school/{id}")
     public String mutate(@Valid @ModelAttribute("school") SchoolDto data, BindingResult theBindingResults, Model model) {
         if(theBindingResults.hasErrors()) {
             model.addAttribute("schools", schoolService.getAllSchools());
             return "school-form";
         }
 
-        if(data.id() != 0) {
-            schoolService.updateSchoolById(data.id(), data);
-        } else {
-            schoolService.createSchool(data);
-        }
+        schoolService.saveSchool(data);
         return "redirect:/schools";
     }
 

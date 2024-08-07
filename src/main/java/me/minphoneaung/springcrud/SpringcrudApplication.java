@@ -6,9 +6,7 @@ import me.minphoneaung.springcrud.entities.School;
 import me.minphoneaung.springcrud.entities.Student;
 import me.minphoneaung.springcrud.repository.SchoolRepository;
 import me.minphoneaung.springcrud.repository.StudentRepository;
-import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -28,7 +26,6 @@ public class SpringcrudApplication {
     }
 
     // FOR DATABASE SEEDING
-
     private final int schoolSeedingCount = 25;
     @Bean
     @Transactional

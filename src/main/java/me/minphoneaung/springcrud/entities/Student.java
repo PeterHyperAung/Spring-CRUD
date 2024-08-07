@@ -26,8 +26,8 @@ public class Student {
 
     private LocalDate dateOfBirth;
 
-    @ManyToOne
-    @JoinColumn(name = "school_id", nullable = true)
+    @ManyToOne()
+    @JoinColumn(name = "school_id")
     @JsonManagedReference
     private School school;
 

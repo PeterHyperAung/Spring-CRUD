@@ -1,4 +1,4 @@
-package me.minphoneaung.springcrud.errors;
+package me.minphoneaung.springcrud.exceptions;
 
 public class ResourceNotFoundException extends RuntimeException {
 
