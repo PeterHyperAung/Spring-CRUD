@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface SchoolRepository extends JpaRepository<School, Integer> {
-    List<School> findByNameContainingIgnoreCase(String name, PageRequest pageRequest);
+    List<School> findByNameContainingIgnoreCaseOrPrincipalContainingIgnoreCase(String name, String principal, PageRequest pageRequest);
     long countByNameContainingIgnoreCase(String name);
 }

@@ -35,18 +35,17 @@ public class SpringcrudApplication {
     public CommandLineRunner commandLineRunner() {
         return (String... args) -> {
             var schoolsList = new ArrayList<School>();
-            var studentsList = new ArrayList<Student>();
 
             for (int i = 1; i <= schoolSeedingCount; i++) {
                 schoolsList.add(createSchool("School " + i, "Principal " + i));
             }
 
             for (int i = 1; i <= 45; i++) {
-                studentsList.add(createStudent("Student " + i, "student" + i + "@gmail.com",
+                createStudent("Student " + i, "student" + i + "@gmail.com",
                         LocalDate.now().minusMonths(i - 1),
                         LocalDate.now().minusMonths(i),
                         schoolsList.get(i % schoolSeedingCount)
-                ));
+                );
             }
 
             System.out.println("SEEDING DONE!");

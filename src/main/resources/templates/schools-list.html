@@ -12,17 +12,11 @@
 <header th:replace="fragments/header.html"></header>
 <main class="mb-5">
     <div class="mt-3 px-5">
-        <a th:href="@{/schools/create}" class="btn btn-info">Create</a>
+        <a th:href="@{/schools/mutate/0}" class="btn btn-info">Create</a>
     </div>
     <h1 class="h2 py-4 text-center">Schools List</h1>
     <div class="px-5">
         <table id="schoolTable" class="display mx-auto" style="max-width: 600px; min-width: 500px;">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                </tr>
-            </thead>
         </table>
     </div>
 </main>
@@ -37,11 +31,7 @@ R
         pageLength: 10,
         ajax: {
             url: "/api/schools",
-            dataSrc: 'data',
-            dataFilter: function(data) {
-                console.log("Raw AJAX response: ", data); // Log raw response
-                return data;
-            }
+            dataSrc: 'data'
         },
         columns: [
             {
@@ -55,13 +45,18 @@ R
                 data: "name"
             },
             {
+                name: "principal",
+                title: "Principal",
+                data: "principal"
+            },
+            {
                 name: "actions",
                 title: "Actions",
                 data: null,
                 render: function(data, type, row, meta) {
                     return `
                     <div class="d-flex gap-2">
-                        <a href="/schools/edit/${row.id}" class="btn btn-sm btn-primary">Edit</a>
+                        <a href="/schools/mutate/${row.id}" class="btn btn-sm btn-primary">Edit</a>
                         <form method="POST" action="/schools/delete/${row.id}">
                             <button class="btn btn-sm btn-danger" type="submit">Delete</button>
                         </form>

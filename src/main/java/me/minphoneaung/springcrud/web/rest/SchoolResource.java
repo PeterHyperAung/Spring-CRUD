@@ -1,5 +1,6 @@
 package me.minphoneaung.springcrud.web.rest;
 
+import lombok.AllArgsConstructor;
 import me.minphoneaung.springcrud.web.rest.dto.DataTableResponseDto;
 import me.minphoneaung.springcrud.web.rest.dto.SchoolDto;
 import me.minphoneaung.springcrud.service.SchoolService;
@@ -10,16 +11,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/schools")
+@AllArgsConstructor
 public class SchoolResource {
 
 
     private final SchoolService service;
     private final SchoolMapper mapper;
-
-    public SchoolResource(SchoolService service, SchoolMapper mapper) {
-        this.service = service;
-        this.mapper = mapper;
-    }
 
     @GetMapping("/hello")
     private String helloworld() {
@@ -40,7 +37,7 @@ public class SchoolResource {
 
         List<SchoolDto> schools = service.getAllSchools(start, length, searchValue, column, direction);
 
-        return mapper.toDataResponseDtoFromSchoolDto(draw, totalRecords, filteredRecords, schools);
+        return toDataTableResponseDtoFromDto(draw, totalRecords, filteredRecords, schools);
     }
 
     @GetMapping("/{id}")
@@ -60,7 +57,12 @@ public class SchoolResource {
 
     @DeleteMapping("{id}")
     private void deleteSchool(@PathVariable Integer id) {
-        service.deleteSchoolById(id);
+        service.forceDeleteSchoolById(id);
     }
 
+    private DataTableResponseDto<SchoolDto> toDataTableResponseDtoFromDto(
+            Integer draw, long recordsTotal, long recordsFiltered, List<SchoolDto> schools
+    ) {
+        return new DataTableResponseDto<>(draw, recordsTotal, recordsFiltered, schools);
+    }
 }

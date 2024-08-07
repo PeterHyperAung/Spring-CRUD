@@ -1,6 +1,7 @@
 package me.minphoneaung.springcrud.service;
 
-import me.minphoneaung.springcrud.dto.PaginationResponseDto;
+import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import me.minphoneaung.springcrud.entities.School;
 import me.minphoneaung.springcrud.errors.ResourceNotFoundException;
 import me.minphoneaung.springcrud.repository.SchoolRepository;
@@ -9,46 +10,28 @@ import me.minphoneaung.springcrud.repository.StudentRepository;
 import me.minphoneaung.springcrud.web.rest.dto.SchoolDto;
 import me.minphoneaung.springcrud.web.rest.mapper.SchoolMapper;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class SchoolService {
 
     private final SchoolMapper mapper;
     private final SchoolRepository repository;
-
     private final StudentRepository studentRepository;
-
-    public SchoolService(SchoolMapper mapper, SchoolRepository repository, StudentRepository studentRepository) {
-        this.mapper = mapper;
-        this.repository = repository;
-        this.studentRepository = studentRepository;
-    }
 
     public List<SchoolDto> getAllSchools() {
         var schools = repository.findAll();
-        var result = new ArrayList<SchoolDto>();
-        for (School school: schools) {
-            result.add(new SchoolDto(school.getId(), school.getName(), school.getPrincipal()));
-        }
-
-        return result;
+        return mapper.toDtoList(schools);
     }
 
     public List<SchoolDto> getAllSchools(int start, int length, String searchValue, int column, String direction) {
         Sort sort = Sort.by(Sort.Order.by(getSortColumn(column)).with(Sort.Direction.fromString(direction)));
         PageRequest pageRequest = PageRequest.of(start / length, length, sort);
-        var schools = repository.findByNameContainingIgnoreCase(searchValue, pageRequest);
-        var result = new ArrayList<SchoolDto>();
-        for (School school: schools) {
-            result.add(new SchoolDto(school.getId(), school.getName(), school.getPrincipal()));
-        }
-        return result;
+        var schools = repository.findByNameContainingIgnoreCaseOrPrincipalContainingIgnoreCase(searchValue, searchValue, pageRequest);
+        return mapper.toDtoList(schools);
     }
 
     private String getSortColumn(int column) {
@@ -57,13 +40,17 @@ public class SchoolService {
                 return "id";
             case 1:
                 return "name";
+            case 2:
+                return "principal";
         };
         return "name";
     }
 
     public SchoolDto getSchoolById(Integer id) {
-        return mapper.toSchoolDto(repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("School Not Found")));
+        var school = new School();
+        school.setId(0);
+        return mapper.toDto(repository.findById(id)
+                .orElse(school));
     }
 
     public int countAllSchools() {
@@ -77,17 +64,20 @@ public class SchoolService {
     public SchoolDto createSchool(SchoolDto dto) {
         var school = new School();
         school.setName(dto.name());
-        return mapper.toSchoolDto(repository.save(school));
+        school.setPrincipal(dto.principal());
+        return mapper.toDto(repository.save(school));
     }
 
     public SchoolDto updateSchoolById(Integer id, SchoolDto dto) {
         var school = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("School Not Found"));
         school.setName(dto.name());
-        return mapper.toSchoolDto(repository.save(school));
+        school.setPrincipal(dto.principal());
+        return mapper.toDto(repository.save(school));
     }
 
-    public void deleteSchoolById(Integer id) {
+    @Transactional
+    public void forceDeleteSchoolById(Integer id) {
         List<Student> students = studentRepository.findBySchoolId(id);
         for(Student student: students) {
             student.setSchool(null);

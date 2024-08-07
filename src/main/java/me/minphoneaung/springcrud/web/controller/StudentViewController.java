@@ -3,18 +3,15 @@ package me.minphoneaung.springcrud.web.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import me.minphoneaung.springcrud.entities.Student;
 import me.minphoneaung.springcrud.service.SchoolService;
 import me.minphoneaung.springcrud.web.rest.dto.StudentDto;
 import me.minphoneaung.springcrud.service.StudentService;
-import me.minphoneaung.springcrud.web.rest.mapper.StudentMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @RequiredArgsConstructor
@@ -27,20 +24,12 @@ public class StudentViewController extends ViewController {
 
     @GetMapping
     public String list() {
-        return "home";
+        return "students-list";
     }
 
     @GetMapping("/students/mutate/{id}")
     public String showStudentForm(@PathVariable(value = "id") Integer id, Model model) {
-       var student = studentService.getStudentById(id);
-        StudentDto dto;
-        if(student == null) {
-            dto = new StudentDto(0, "", "", null, null, null);
-        } else {
-            dto = new StudentDto(student.id(), student.name(),
-                    student.email(), student.dateOfBirth(),
-                    student.schoolId(), student.startedAt());
-        }
+        var dto = studentService.getStudentById(id);
 
         model.addAttribute("student", dto);
         model.addAttribute("schools", schoolService.getAllSchools());

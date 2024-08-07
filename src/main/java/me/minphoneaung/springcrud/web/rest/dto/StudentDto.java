@@ -3,6 +3,7 @@ package me.minphoneaung.springcrud.web.rest.dto;
 
 import jakarta.validation.constraints.*;
 import me.minphoneaung.springcrud.annotations.ValidateDateOfBirth;
+import me.minphoneaung.springcrud.entities.School;
 
 import java.time.LocalDate;
 
@@ -20,6 +21,7 @@ public record StudentDto(
         @ValidateDateOfBirth
         LocalDate dateOfBirth,
         Integer schoolId,
+        School school,
 
         LocalDate startedAt
 ) {

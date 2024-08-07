@@ -32,6 +32,6 @@ public abstract class ViewController implements PaginableViewController {
 
         }
 
-        return "home";
+        return "students-list";
     }
 }

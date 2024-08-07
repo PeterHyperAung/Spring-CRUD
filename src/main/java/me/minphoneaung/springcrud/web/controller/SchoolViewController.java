@@ -18,40 +18,34 @@ public class SchoolViewController extends ViewController {
 
     @GetMapping("")
     public String schoolsList() {
-        return "school";
+        return "schools-list";
     }
 
-    @GetMapping("/create")
-    public String showCreateForm(Model model) {
-        model.addAttribute("school", new SchoolDto(null, "", ""));
-        return "create-school";
+    @GetMapping("/mutate/{id}")
+    public String showSchoolForm(@PathVariable Integer id, Model model) {
+        var school = schoolService.getSchoolById(id);
+        model.addAttribute("school", school);
+        return "school-form";
     }
 
-    @PostMapping("/create")
-    public String create(@Valid @ModelAttribute("school") SchoolDto data, BindingResult theBindingResults, Model model) {
+    @PostMapping("/mutate/{id}")
+    public String mutate(@Valid @ModelAttribute("school") SchoolDto data, BindingResult theBindingResults, Model model) {
         if(theBindingResults.hasErrors()) {
             model.addAttribute("schools", schoolService.getAllSchools());
-            return "create-school";
+            return "school-form";
         }
-        schoolService.createSchool(data);
-        return "redirect:/schools";
-    }
 
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Integer id, Model model) {
-        model.addAttribute("school", schoolService.getSchoolById(id));
-        return "edit-school";
-    }
-
-    @PostMapping("/edit/{id}")
-    public String update(@PathVariable Integer id, @ModelAttribute SchoolDto data) {
-        schoolService.updateSchoolById(id, data);
+        if(data.id() != 0) {
+            schoolService.updateSchoolById(data.id(), data);
+        } else {
+            schoolService.createSchool(data);
+        }
         return "redirect:/schools";
     }
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable Integer id) {
-        schoolService.deleteSchoolById(id);
+        schoolService.forceDeleteSchoolById(id);
         return "redirect:/schools";
     }
 
