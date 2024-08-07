@@ -20,10 +20,10 @@
   <div class="px-5 mt-3 mb-5">
     <div class="card mx-auto" style="max-width: 500px; width: 90%;">
       <div class="card-body p-4">
-        <h5 class="card-title mb-3 text-center" th:text="${student.id() == 0 ? 'Create student' : 'Edit Student'}"></h5>
+        <h5 class="card-title mb-3 text-center"  th:text="${#objects.nullSafe(student.id(), 0) == 0 ? 'Create School' : 'Edit School'}"></h5>
 
-        <form action="#" th:action="@{/students/student/{id}(id=${student.id()})}" th:object="${student}" method="POST">
-          <input th:if="${student.id != 0}" name="id" type="hidden" th:field="*{id}">
+        <form action="#" th:action="@{/students/student}" th:object="${student}" method="POST">
+          <input name="id" type="hidden" th:field="*{id}">
 
           <div class="mb-4">
             <label for="name" class="mb-2">Name</label>
@@ -63,7 +63,7 @@
             <input id="startedAt" type="date" class="form-control mb-1" th:field="*{startedAt}" />
           </div>
 
-          <button type="submit" class="btn btn-primary d-block ms-auto" th:text="${student.id() == 0 ? 'Create' : 'Update'}"></button>
+          <button type="submit" class="btn btn-primary d-block ms-auto" th:text="${#objects.nullSafe(student.id(), 0) == 0 ? 'Create' : 'Update'}"></button>
 
         </form>
       </div>

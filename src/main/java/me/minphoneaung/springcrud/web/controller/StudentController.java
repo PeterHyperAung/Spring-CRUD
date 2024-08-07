@@ -33,7 +33,7 @@ public class StudentController extends ErrorController {
         return "student-form";
     }
 
-    @PostMapping("/student/{id}")
+    @PostMapping("/student")
     public String createOrUpdate(@Valid @ModelAttribute("student") StudentDto data, BindingResult bindingResult, Model model) {
         model.addAttribute("schools", schoolService.getAllSchools());
 

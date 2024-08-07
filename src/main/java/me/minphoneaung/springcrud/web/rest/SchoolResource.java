@@ -25,7 +25,7 @@ public class SchoolResource {
         return "hello world";
     }
 
-    @PostMapping("/pagination")
+    @PostMapping
     private DataTablesOutput<SchoolDto> getSchools(
             @RequestBody DataTablesInput dataTablesInput
     ) {
@@ -39,7 +39,7 @@ public class SchoolResource {
         return service.getSchoolById(id);
     }
 
-    @PostMapping
+    @PostMapping("/school")
     private SchoolDto createSchool(@RequestBody SchoolDto dto) {
         return service.saveSchool(dto);
     }

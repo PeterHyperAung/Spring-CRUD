@@ -25,7 +25,7 @@ public class StudentResource {
         return "hello world";
     }
 
-    @PostMapping("/pagination")
+    @PostMapping
     private DataTablesOutput<StudentDto> getStudents(
             @RequestBody DataTablesInput dataTablesInput
     )
@@ -41,7 +41,7 @@ public class StudentResource {
         return service.getStudentById(id);
     }
 
-    @PostMapping
+    @PostMapping("/student")
     private StudentDto createStudent(@RequestBody StudentDto dto) {
         return service.saveStudent(dto);
     }

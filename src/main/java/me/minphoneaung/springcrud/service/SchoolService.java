@@ -34,10 +34,8 @@ public class SchoolService {
 
 
     public SchoolDto getSchoolById(Integer id) {
-        var school = new School();
-        school.setId(0);
         return mapper.toDto(repository.findById(id)
-                .orElse(school));
+                .orElse(School.builder().id(0).build()));
     }
 
     public SchoolDto saveSchool(SchoolDto dto) {

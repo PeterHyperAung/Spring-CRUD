@@ -28,7 +28,7 @@ public class SchoolController extends ErrorController {
         return "school-form";
     }
 
-    @PostMapping("/school/{id}")
+    @PostMapping("/school")
     public String mutate(@Valid @ModelAttribute("school") SchoolDto data, BindingResult theBindingResults, Model model) {
         if(theBindingResults.hasErrors()) {
             model.addAttribute("schools", schoolService.getAllSchools());
