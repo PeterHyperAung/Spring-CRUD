@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <title>Students Management</title>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.css}">
     <link rel="stylesheet" th:href="@{/css/dataTables.min.css}">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
@@ -11,8 +11,10 @@
 <body>
     <header th:insert="fragments/header.html"></header>
     <main class="mb-5">
-        <div class="mt-3 px-5">
-            <a th:href="@{/students/student/0}" class="btn btn-info">Create</a>
+        <div th:if="${!#authentication.authorities.isEmpty() && #authentication.authorities[0].authority == 'ROLE_ADMIN'}">
+            <div class="mt-3 px-5">
+                <a th:href="@{/students/student/0}" class="btn btn-info">Create</a>
+            </div>
         </div>
         <div class="my-3" th:if="${success != null}">
             <div class="alert alert-success" th:text="${success}"></div>
@@ -25,11 +27,84 @@
 <!--        <div th:replace="fragments/pagination-nav.html :: pagination(path='/')"></div>-->
     </main>
 
+    <div id="USER_ROLE" class="display-none" th:text="${#authentication.authorities[0].authority}"></div>
+
 
     <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.min.js}"></script>
     <script th:src="@{/webjars/jquery/3.7.1/jquery.min.js}"></script>
     <script th:src="@{/js/dataTables.js}"></script>
     <script>
+        const role = document.getElementById("USER_ROLE");
+
+        let columns = [
+            {
+                name: "id",
+                title: "Id",
+                data: "id"
+            },
+            {
+                name: "name",
+                title: "Name",
+                data: "name"
+            },
+            {
+                name: "email",
+                title: "Email",
+                data: "email"
+            },
+            {
+                name: "dateOfBirth",
+                title: "Date Of Birth",
+                data: "dateOfBirth"
+            },
+            {
+                name: "school",
+                title: "School",
+                data: "school",
+                render: function(data, type, row, meta) {
+                    return `
+                            <span>${row.school ? row.school.name: "No School"}</span>
+                        `
+                }
+            },
+            {
+                name: "startedAt",
+                title: "Started At",
+                data: "startedAt",
+                render: function(data, type, row, meta) {
+                    return `
+                            <span>${row.startedAt ? row.startedAt : 'No date selected'}</span>
+                        `
+                }
+            },
+            {
+                name: "actions",
+                title: "Actions",
+                data: null,
+                render: function(data, type, row, meta) {
+                    return `
+                    <div class="d-flex gap-2">
+                        <a href="/students/student/${row.id}" class="btn btn-sm btn-primary">Edit</a>
+                        <form method="POST" action="/students/student/delete/${row.id}">
+                            <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+                        </form>
+                    </div>
+                    `
+                }
+            }
+        ];
+        let columnDefs = [
+            {
+                targets: -1,
+                orderable: false,
+                searchable: false,
+            }
+        ];
+
+        if(role.textContent !== "ROLE_ADMIN") {
+            columns = columns.slice(0, -1);
+            columnDefs = [];
+        }
         $("#studentTable").DataTable({
             paging: true,
             pageLength: 10,
@@ -42,70 +117,8 @@
                     return JSON.stringify(d);
                 },
             },
-            columns: [
-                {
-                    name: "id",
-                    title: "Id",
-                    data: "id"
-                },
-                {
-                    name: "name",
-                    title: "Name",
-                    data: "name"
-                },
-                {
-                    name: "email",
-                    title: "Email",
-                    data: "email"
-                },
-                {
-                    name: "dateOfBirth",
-                    title: "Date Of Birth",
-                    data: "dateOfBirth"
-                },
-                {
-                    name: "school",
-                    title: "School",
-                    data: "school",
-                    render: function(data, type, row, meta) {
-                        return `
-                            <span>${row.school ? row.school.name: "No School"}</span>
-                        `
-                    }
-                },
-                {
-                  name: "startedAt",
-                  title: "Started At",
-                  data: "startedAt",
-                  render: function(data, type, row, meta) {
-                        return `
-                            <span>${row.startedAt ? row.startedAt : 'No date selected'}</span>
-                        `
-                  }
-                },
-                {
-                    name: "actions",
-                    title: "Actions",
-                    data: null,
-                    render: function(data, type, row, meta) {
-                        return `
-                    <div class="d-flex gap-2">
-                        <a href="/students/student/${row.id}" class="btn btn-sm btn-primary">Edit</a>
-                        <form method="POST" action="/students/student/delete/${row.id}">
-                            <button class="btn btn-sm btn-danger" type="submit">Delete</button>
-                        </form>
-                    </div>
-                    `
-                    }
-                }
-            ],
-            columnDefs: [
-                {
-                    targets: -1,
-                    orderable: false,
-                    searchable: false,
-                }
-            ],
+            columns,
+            columnDefs,
             processing: true,
             serverSide: true
         });

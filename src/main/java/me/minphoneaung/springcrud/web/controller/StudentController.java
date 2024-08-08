@@ -1,7 +1,6 @@
 package me.minphoneaung.springcrud.web.controller;
 
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import me.minphoneaung.springcrud.service.SchoolService;
 import me.minphoneaung.springcrud.web.rest.dto.StudentDto;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import javax.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor

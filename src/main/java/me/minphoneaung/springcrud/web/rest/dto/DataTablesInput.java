@@ -2,11 +2,11 @@ package me.minphoneaung.springcrud.web.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import lombok.Data;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
@@ -137,10 +137,17 @@ public class DataTablesInput {
    * Get Pageable for spring datatable
    * by AMH
    */
-  public PageRequest getPageable() {
+  public Pageable getPageable() {
 		int page = this.getStart() / this.getLength();
-		Direction dir = Direction.valueOf(order.get(0).getDir().toUpperCase());
-		String columnName = columns.get(order.get(0).getColumn()).getData();
+        String columnName;
+        Direction dir;
+        if(order.size() == 0) {
+          dir = Direction.valueOf("ASC");
+          columnName = columns.get(0).getData();
+        } else {
+          dir = Direction.valueOf(order.get(0).getDir().toUpperCase());
+          columnName = columns.get(order.get(0).getColumn()).getData();
+        }
 		return PageRequest.of(page, length, Sort.by(dir, columnName));
   }
 

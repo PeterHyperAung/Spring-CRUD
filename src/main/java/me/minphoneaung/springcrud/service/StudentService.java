@@ -9,6 +9,7 @@ import me.minphoneaung.springcrud.web.rest.mapper.StudentMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,10 +23,10 @@ public class StudentService {
     private final StudentMapper mapper;
 
     public Page<Student> getAllStudents(DataTablesInput dataTablesInput) {
-        PageRequest pageRequest = dataTablesInput.getPageable();
+        Pageable pageable = dataTablesInput.getPageable();
         var searchValue = dataTablesInput.getSearch().getValue();
         return repository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrSchool_NameContainingIgnoreCase
-                (searchValue, searchValue, searchValue, pageRequest);
+                (searchValue, searchValue, searchValue, pageable);
     }
 
     public StudentDto getStudentById(Integer id) {

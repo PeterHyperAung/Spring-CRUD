@@ -9,8 +9,6 @@ import me.minphoneaung.springcrud.web.rest.mapper.SchoolMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(path = "/api/schools")
 @AllArgsConstructor
@@ -29,9 +27,9 @@ public class SchoolResource {
     private DataTablesOutput<SchoolDto> getSchools(
             @RequestBody DataTablesInput dataTablesInput
     ) {
-        System.out.println(dataTablesInput);
-        Page<SchoolDto> schools = mapper.toDtoPage(service.getAllSchools(dataTablesInput));
-        return DataTablesOutput.createDataTableOutput(schools, dataTablesInput);
+        return DataTablesOutput.createDataTableOutput(
+                mapper.toDtoPage(service.getAllSchools(dataTablesInput)),
+                dataTablesInput);
     }
 
     @GetMapping("/{id}")

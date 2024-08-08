@@ -1,6 +1,5 @@
 package me.minphoneaung.springcrud.web.controller;
 
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import me.minphoneaung.springcrud.web.rest.dto.SchoolDto;
 import me.minphoneaung.springcrud.service.SchoolService;
@@ -8,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import javax.validation.Valid;
 
 @AllArgsConstructor
 @Controller
@@ -39,7 +39,7 @@ public class SchoolController extends ErrorController {
         return "redirect:/schools";
     }
 
-    @PostMapping("/delete/{id}")
+    @PostMapping("/school/delete/{id}")
     public String delete(@PathVariable Integer id) {
         schoolService.forceDeleteSchoolById(id);
         return "redirect:/schools";

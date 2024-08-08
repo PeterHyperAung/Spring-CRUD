@@ -1,14 +1,20 @@
 package me.minphoneaung.springcrud.web.rest.dto;
 
-import jakarta.validation.constraints.NotEmpty;
+import lombok.*;
 
-public record SchoolDto(
+import javax.validation.constraints.*;
 
-        Integer id,
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class SchoolDto {
+        Integer id;
 
         @NotEmpty(message = "Name should not be empty")
-        String name,
+        String name;
+
         @NotEmpty(message = "Principal name should not be empty")
-        String principal
-) {
+        String principal;
 }
+

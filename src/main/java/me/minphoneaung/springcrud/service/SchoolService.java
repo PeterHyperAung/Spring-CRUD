@@ -1,6 +1,5 @@
 package me.minphoneaung.springcrud.service;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import me.minphoneaung.springcrud.entities.School;
 import me.minphoneaung.springcrud.repository.SchoolRepository;
@@ -11,7 +10,10 @@ import me.minphoneaung.springcrud.web.rest.dto.SchoolDto;
 import me.minphoneaung.springcrud.web.rest.mapper.SchoolMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -26,10 +28,10 @@ public class SchoolService {
         return mapper.toDtoList(repository.findAll());
     }
     public Page<School> getAllSchools(DataTablesInput dataTablesInput) {
-        PageRequest pageRequest = dataTablesInput.getPageable();
+        Pageable pageable = dataTablesInput.getPageable();
         var searchValue = dataTablesInput.getSearch().getValue();
         return repository.findByNameContainingIgnoreCaseOrPrincipalContainingIgnoreCase
-                (searchValue, searchValue, pageRequest);
+                (searchValue, searchValue, pageable);
     }
 
 

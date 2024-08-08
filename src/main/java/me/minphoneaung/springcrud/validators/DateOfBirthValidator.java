@@ -1,9 +1,9 @@
 package me.minphoneaung.springcrud.validators;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
 import me.minphoneaung.springcrud.annotations.ValidateDateOfBirth;
 
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
 
 public class DateOfBirthValidator implements ConstraintValidator<ValidateDateOfBirth, LocalDate> {

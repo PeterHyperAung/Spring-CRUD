@@ -1,9 +1,10 @@
 package me.minphoneaung.springcrud.annotations;
 
-import jakarta.validation.Constraint;
-import jakarta.validation.Payload;
+
 import me.minphoneaung.springcrud.validators.DateOfBirthValidator;
 
+import javax.validation.Constraint;
+import javax.validation.Payload;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
