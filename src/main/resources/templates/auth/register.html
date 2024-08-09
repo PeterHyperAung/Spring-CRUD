@@ -32,7 +32,12 @@
     </div>
   </div>
 
-<link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.css}">
+  <div class="my-3">
+    <div th:if="${#httpServletRequest.getParameter('usernameAlreadyExists') != null}">
+      <div class="alert alert-danger text-center mx-auto" style="max-width: 500px;">Username already exists!</div>
+    </div>
+  </div>
+
 
 </body>
 </html>

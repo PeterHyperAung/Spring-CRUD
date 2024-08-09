@@ -12,8 +12,11 @@
         <h5 class="card-title text-center">Logout</h5>
         <div class="mt-4">
             <h6 class="mb-4 lead text-center">Are you sure you want to logout?</h6>
-            <div class="text-center">
-                <a href="/auth/logout" class="btn btn-primary">Yes</a> &nbsp;
+            <div class="text-center d-flex justify-content-center align-items-center gap-1">
+                <form action="/logout" method="POST">
+                    <button type="submit" class="btn btn-primary">Yes</button> &nbsp;
+                </form>
+
                 <a href="/" class="btn btn-primary">No</a>
             </div>
         </div>

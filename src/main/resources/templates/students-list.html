@@ -27,7 +27,7 @@
 <!--        <div th:replace="fragments/pagination-nav.html :: pagination(path='/')"></div>-->
     </main>
 
-    <div id="USER_ROLE" class="display-none" th:text="${#authentication.authorities[0].authority}"></div>
+    <div id="USER_ROLE" class="d-none" th:text="${#authentication.authorities[0].authority}"></div>
 
 
     <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.min.js}"></script>

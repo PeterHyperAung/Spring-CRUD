@@ -1,6 +1,7 @@
 package me.minphoneaung.springcrud.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,8 +22,10 @@ public class User {
     @GeneratedValue
     private Integer id;
 
+    @Column(unique = true)
     private String username;
 
+    @JsonIgnore
     private String password;
 
     @Enumerated(EnumType.STRING)
