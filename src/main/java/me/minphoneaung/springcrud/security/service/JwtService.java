@@ -21,8 +21,8 @@ public class JwtService {
     private final String SECRET_KEY = "secret";
     public static final Integer JWT_EXPIRATION = 1000 * 60 * 60 * 24;
 
-    public Integer getUserId(String token) {
-        return Integer.parseInt(extractClaim(token, Claims::getSubject));
+    public String getUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
     }
 
     public UserAuthDto getUser(String token) {
@@ -55,28 +55,24 @@ public class JwtService {
         return getExpiration(token).before(new Date());
     }
 
-    public String generateToken(int userId, UserAuthDto dto) {
+    public String generateToken(String username, UserAuthDto dto) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", dto.getId());
         claims.put("username", dto.getUsername());
         claims.put("role", dto.getRole());
-        return createToken(claims, userId);
+        return createToken(claims, username);
     }
 
-    private String createToken(Map<String, Object> claims, int userId) {
+    private String createToken(Map<String, Object> claims, String username) {
 
-        return Jwts.builder().setClaims(claims).setSubject(String.valueOf(userId)).setIssuedAt(new Date(System.currentTimeMillis()))
+        return Jwts.builder().setClaims(claims).setSubject(username).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
-    public Boolean validateToken(String token, int userId) {
-        final int id = getUserId(token);
-        return (id == userId && !isTokenExpired(token));
+    public Boolean validateToken(String token, String username) {
+        final String name = getUsername(token);
+        return (name.equals(username) && !isTokenExpired(token));
     }
 
-    @Override
-    public String toString() {
-        return "JWTSERVICE";
-    }
 }

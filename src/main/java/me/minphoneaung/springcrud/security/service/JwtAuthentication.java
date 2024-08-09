@@ -1,4 +1,4 @@
-package me.minphoneaung.springcrud.security.provider;
+package me.minphoneaung.springcrud.security.service;
 
 import me.minphoneaung.springcrud.security.dto.UserAuthDto;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

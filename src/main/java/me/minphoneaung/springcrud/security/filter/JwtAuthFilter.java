@@ -1,14 +1,12 @@
 package me.minphoneaung.springcrud.security.filter;
 
-import lombok.AllArgsConstructor;
 import me.minphoneaung.springcrud.security.mapper.UserAuthMapper;
-import me.minphoneaung.springcrud.security.provider.JwtAuthentication;
+import me.minphoneaung.springcrud.security.service.JwtAuthentication;
 import me.minphoneaung.springcrud.security.service.JwtService;
 import me.minphoneaung.springcrud.security.service.JwtUserDetailsService;
 import me.minphoneaung.springcrud.security.userDetails.SecurityUser;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -70,10 +68,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // Getting jwt and user details from cookie;
         var token = jwtCookie.getValue();
         var user = jwtService.getUser(token);
-        var userId = jwtService.getUserId(token);
+        var userName = jwtService.getUsername(token);
 
-        if(user.getUsername() != null && jwtService.validateToken(token, userId)) {
-            SecurityUser userDetails = userDetailsService.loadUserById(userId);
+        if(user.getUsername() != null && jwtService.validateToken(token, userName)) {
+            SecurityUser userDetails = userDetailsService.loadUserByUsername(userName);
             // Create authentication object in context
             JwtAuthentication authenticationToken = new JwtAuthentication(
                     user.getUsername(),
