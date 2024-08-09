@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public String handleUsernameNotFoundException(UsernameNotFoundException e) {
+    public String handleUsernameNotFoundException(UsernameNotFoundException ex) {
         return "redirect:/login?error";
     }
 }

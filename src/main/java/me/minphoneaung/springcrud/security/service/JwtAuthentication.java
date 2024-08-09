@@ -8,7 +8,7 @@ import java.util.Collection;
 
 public class JwtAuthentication extends UsernamePasswordAuthenticationToken {
 
-    private UserAuthDto userAuthDto;
+    private final UserAuthDto userAuthDto;
 
     public JwtAuthentication(Object principal,
                              Object credentials,
@@ -23,6 +23,11 @@ public class JwtAuthentication extends UsernamePasswordAuthenticationToken {
                              UserAuthDto userAuthDto) {
         super(principal, credentials);
         this.userAuthDto = userAuthDto;
+    }
+
+    @Override
+    public UserAuthDto getDetails() {
+        return userAuthDto;
     }
 
     public UserAuthDto getUserAuthDto() {

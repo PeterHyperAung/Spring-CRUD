@@ -45,16 +45,16 @@ public class AuthController {
         var user = userDetailsService.loadUserByUsername(authRequestDTO.getUsername());
         Authentication authentication = authenticationManager.authenticate(
                 new JwtAuthentication(
-                authRequestDTO.getUsername(),
-                authRequestDTO.getPassword(),
-                user.getAuthorities(),
-                new UserAuthDto(user.getUser().getId(),
                         authRequestDTO.getUsername(),
                         authRequestDTO.getPassword(),
-                        user.getUser().getRole())
+                        user.getAuthorities(),
+                        new UserAuthDto(user.getUser().getId(),
+                                authRequestDTO.getUsername(),
+                                authRequestDTO.getPassword(),
+                                user.getUser().getRole())
                 ));
 
-        if(authentication.isAuthenticated()){
+        if (authentication.isAuthenticated()) {
             String token = jwtService.generateToken(user.getUser().getUsername(),
                     userAuthMapper.toDto(user.getUser()));
 
@@ -66,6 +66,7 @@ public class AuthController {
                     .maxAge(JwtService.JWT_EXPIRATION)
                     .build();
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+            response.addHeader(HttpHeaders.AUTHORIZATION, token);
 
             return "home";
         } else {
@@ -85,7 +86,7 @@ public class AuthController {
 
         try {
             userRepository.save(user);
-        } catch(DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             return "redirect:/register?usernameAlreadyExists";
         }
 

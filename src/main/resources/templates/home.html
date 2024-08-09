@@ -16,7 +16,7 @@
   <div class="container my-5">
     <h1 class="mb-3">Student Management Dashboard</h1>
     <div th:if="${#authentication.principal != null}">
-      <p>Welcome, <span th:text="${#authentication.principal}">User</span>!</p>
+      <p>Welcome, back!</p>
     </div>
     <div>
       <a href="/students">Students List</a> &nbsp;

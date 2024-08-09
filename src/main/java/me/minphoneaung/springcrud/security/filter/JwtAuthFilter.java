@@ -5,7 +5,9 @@ import me.minphoneaung.springcrud.security.service.JwtAuthentication;
 import me.minphoneaung.springcrud.security.service.JwtService;
 import me.minphoneaung.springcrud.security.service.JwtUserDetailsService;
 import me.minphoneaung.springcrud.security.userDetails.SecurityUser;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -38,8 +40,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final List<String> permitAllRegexUrls = new ArrayList<>();
 
     public boolean isPermitUrl(String uri) {
-        for (String regexUri: permitAllRegexUrls) {
-            if(uri.startsWith(regexUri)) {
+        for (String regexUri : permitAllRegexUrls) {
+            if (uri.startsWith(regexUri)) {
                 return true;
             }
         }
@@ -52,26 +54,38 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         var uri = request.getRequestURI();
 
-        if(isPermitUrl(uri)) {
+        if (isPermitUrl(uri)) {
             filterChain.doFilter(request, response);
             return;
         }
 
 
         Cookie jwtCookie = getJwtCookie(request);
+        String bearer = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String token;
 
-        if (jwtCookie == null) {
+        if(bearer != null && bearer.contains("Bearer")) {
+          token = bearer.split(" ")[1];
+        } else if (jwtCookie != null) {
+            token = jwtCookie.getValue();
+        } else {
             response.sendRedirect("/login");
             return;
         }
 
-        // Getting jwt and user details from cookie;
-        var token = jwtCookie.getValue();
+
         var user = jwtService.getUser(token);
         var userName = jwtService.getUsername(token);
 
-        if(user.getUsername() != null && jwtService.validateToken(token, userName)) {
-            SecurityUser userDetails = userDetailsService.loadUserByUsername(userName);
+        if (user.getUsername() != null && jwtService.validateToken(token, userName)) {
+            SecurityUser userDetails;
+            try {
+                userDetails = userDetailsService.loadUserByUsername(userName);
+            } catch (UsernameNotFoundException ex) {
+                response.sendRedirect("/login");
+                return;
+            }
+
             // Create authentication object in context
             JwtAuthentication authenticationToken = new JwtAuthentication(
                     user.getUsername(),
@@ -91,7 +105,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private Cookie getJwtCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
 
-        if(cookies != null) {
+        if (cookies != null) {
             return Arrays.stream(cookies)
                     .filter(cookie -> "JWT".equals(cookie.getName()))
                     .findFirst().orElse(null);
